@@ -6,14 +6,14 @@ export const db = {
       email: "admin@example.com",
       name: "Admin",
       role: "admin",
-      password: "admin123",
+      password: "admin1234",
     }, // ISSUE: plain password
     {
       id: 2,
       email: "user@example.com",
       name: "User",
       role: "user",
-      password: "user123",
+      password: "user1234",
     },
   ],
 };
