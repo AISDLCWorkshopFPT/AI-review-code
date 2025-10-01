@@ -3,7 +3,7 @@ import { execSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
 import { fetch } from "undici";
 
-const MODEL = process.env.CLAUDE_MODEL || "claude-3-5-sonnet-latest";
+const MODEL = process.env.CLAUDE_MODEL || "claude-sonnet-4-5";
 const API_KEY = process.env.ANTHROPIC_API_KEY;
 if (!API_KEY) {
   console.error("Missing ANTHROPIC_API_KEY");
