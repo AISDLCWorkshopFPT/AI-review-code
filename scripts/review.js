@@ -78,14 +78,16 @@ async function callClaude(content) {
     model: MODEL,
     max_tokens: 2000,
     temperature: 0.2,
+    // 👉 system phải ở top-level (không dùng role:"system" trong messages)
+    system: systemPrompt,
     messages: [
-      { role: "system", content: systemPrompt },
       {
         role: "user",
         content: userHeader + "\n\n### DIFF CHUNK\n```\n" + content + "\n```",
       },
     ],
   };
+
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -95,11 +97,13 @@ async function callClaude(content) {
     },
     body: JSON.stringify(body),
   });
+
   if (!res.ok) {
     throw new Error(`Claude API error: ${res.status} ${await res.text()}`);
   }
   const json = await res.json();
-  const text = json.content?.[0]?.text || "";
+  // Anthropic trả về mảng content blocks; lấy text của block đầu
+  const text = (json.content && json.content[0] && json.content[0].text) || "";
   return text;
 }
 
@@ -144,7 +148,6 @@ let allIssues = [];
         const { md, issues } = extractSections(answer);
         reviewAll += `\n---\n\n${md}\n`;
         if (Array.isArray(issues)) {
-          // Chuẩn hoá nhỏ
           for (const it of issues) {
             if (!it || !it.title) continue;
             it.severity = (it.severity || "Medium").trim();
@@ -159,7 +162,6 @@ let allIssues = [];
     }
   }
 
-  // Gộp & ghi file
   writeFileSync("review.md", reviewAll, "utf8");
   writeFileSync("issues.json", JSON.stringify(allIssues, null, 2), "utf8");
   console.log(
