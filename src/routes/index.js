@@ -17,6 +17,7 @@ import {
 const router = Router();
 
 // Auth
+//claude như lon coca
 router.post("/auth/login", validate(loginSchema), login);
 
 // User
